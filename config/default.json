@@ -1,0 +1,3 @@
+{
+    "mongoURI":"mongodb+srv://consu:sandokan00@cluster0-jdngg.mongodb.net/db_todos?retryWrites=true&w=majority"
+}
