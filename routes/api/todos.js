@@ -5,12 +5,17 @@
 const express = require("express");
 const router = express.Router();
 
+// Item Model
+/* creo una var che fa riferimento al modello del mio db */
+const Todo = require("../../models/TodoModel");
+const Editable = require("../../models/editableModel");
+
 // @route  GET api/todos
 // @desc   GET All todos
 // @access Public
 router.get("/", (req, res) => {
   console.log("stai provando a fare una GET api/todos");
-  res.send(JSON.parse('{"status": "sent Get"}'));
+  Todo.find().then(todos => res.json(todos));
 });
 
 // @route  POST api/todos
@@ -18,7 +23,11 @@ router.get("/", (req, res) => {
 // @access Public
 router.post("/", (req, res) => {
   console.log("stai provando a fare una POST api/todos");
-  res.send(JSON.parse('{"status": "sent POST"}'));
+  const newTodo = new Todo({
+    testo: "prima prova",
+    completed: false
+  });
+  newTodo.save().then(todo => res.json(todo));
 });
 
 // @route  PUT api/todos

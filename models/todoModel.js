@@ -6,27 +6,14 @@ const Schema = mongoose.Schema;
 
 //Create Schema
 const TodoSchema = new Schema({
-  todos: [
-    {
-      id: 1,
-      testo: "mangiare",
-      completed: false
-    },
-    {
-      id: 2,
-      testo: "bere",
-      completed: false
-    },
-    {
-      id: 3,
-      testo: "studiare",
-      completed: false
-    }
-  ],
-  editable: {
-    id: 0,
-    title: ""
+  testo: {
+    type: String,
+    require: true
+  },
+  completed: {
+    type: Boolean,
+    require: true
   }
 });
 
-module.exports = Item = mongoose.model("item", ItemSchema);
+module.exports = Todo = mongoose.model("todo", TodoSchema);
