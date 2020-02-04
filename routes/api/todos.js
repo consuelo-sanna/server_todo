@@ -8,7 +8,6 @@ const router = express.Router();
 // Item Model
 /* creo una var che fa riferimento al modello del mio db */
 const Todo = require("../../models/TodoModel");
-const Editable = require("../../models/editableModel");
 
 // @route  GET api/todos
 // @desc   GET All todos
@@ -24,7 +23,13 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   console.log("stai provando a fare una GET api/todos");
   Todo.findById(req.params.id)
-    .then(todo => res.json(todo))
+    .then(todo => {
+      if (todo) {
+        res.json(todo);
+      } else {
+        res.status(404).send(" id Not found"); //.json({success:false})
+      }
+    })
     .catch(err => res.status(404).json({ success: false }));
 });
 
@@ -46,7 +51,13 @@ router.post("/", (req, res) => {
 router.put("/:id", (req, res) => {
   console.log("stai provando a fare una PUT dell id:" + req.params.id);
   Todo.findByIdAndUpdate({ _id: req.params.id }, req.body)
-    .then(todo => res.json(todo))
+    .then(todo => {
+      if (todo) {
+        res.json(todo);
+      } else {
+        res.status(404).send(" id Not found"); //.json({success:false})
+      }
+    })
     .catch(err => res.status(404).json({ success: false }));
 });
 
