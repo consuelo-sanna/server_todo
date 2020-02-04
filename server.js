@@ -4,7 +4,7 @@ var mongoose = require("mongoose");
 const config = require("config");
 
 //per le POST e PUT, permette di vedere i dati in json -> forse dovevi usarlo
-//app.use(express.json());
+app.use(express.json());
 
 app.use("/api/todos", require("./routes/api/todos"));
 

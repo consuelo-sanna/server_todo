@@ -18,13 +18,23 @@ router.get("/", (req, res) => {
   Todo.find().then(todos => res.json(todos));
 });
 
+// @route  GETById api/todos
+// @desc   GETById one specific todo
+// @access Public
+router.get("/:id", (req, res) => {
+  console.log("stai provando a fare una GET api/todos");
+  Todo.findById(req.params.id)
+    .then(todo => res.json(todo))
+    .catch(err => res.status(404).json({ success: false }));
+});
+
 // @route  POST api/todos
 // @desc   Create a todo
 // @access Public
 router.post("/", (req, res) => {
-  console.log("stai provando a fare una POST api/todos");
+  console.log("stai provando a fare una POST api/todos   " + req.body.testo);
   const newTodo = new Todo({
-    testo: "prima prova",
+    testo: req.body.testo,
     completed: false
   });
   newTodo.save().then(todo => res.json(todo));
@@ -35,7 +45,9 @@ router.post("/", (req, res) => {
 // @access Public
 router.put("/:id", (req, res) => {
   console.log("stai provando a fare una PUT dell id:" + req.params.id);
-  res.send(JSON.parse('{"status": "sent PUT"}'));
+  Todo.findByIdAndUpdate({ _id: req.params.id }, req.body)
+    .then(todo => res.json(todo))
+    .catch(err => res.status(404).json({ success: false }));
 });
 
 // @route  DELETE api/todos
@@ -43,7 +55,9 @@ router.put("/:id", (req, res) => {
 // @access Public
 router.delete("/:id", (req, res) => {
   console.log("stai provando a fare una DELETE dell id:" + req.params.id);
-  res.send(JSON.parse('{"status": "sent DELETE"}'));
+  Todo.findById(req.params.id)
+    .then(todo => todo.remove().then(() => res.json({ success: true })))
+    .catch(err => res.status(404).json({ success: false }));
 });
 
 module.exports = router;
