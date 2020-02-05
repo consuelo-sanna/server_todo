@@ -14,7 +14,9 @@ const Todo = require("../../models/TodoModel");
 // @access Public
 router.get("/", (req, res) => {
   console.log("stai provando a fare una GET api/todos");
-  Todo.find().then(todos => res.json(todos));
+  Todo.find()
+    .sort({ _id: -1 })
+    .then(todos => res.json(todos));
 });
 
 // @route  GETById api/todos
@@ -25,7 +27,7 @@ router.get("/:id", (req, res) => {
   Todo.findById(req.params.id)
     .then(todo => {
       if (todo) {
-        res.json(todo);
+        res.status(200).json(todo);
       } else {
         res.status(404).send(" id Not found"); //.json({success:false})
       }
@@ -37,7 +39,7 @@ router.get("/:id", (req, res) => {
 // @desc   Create a todo
 // @access Public
 router.post("/", (req, res) => {
-  console.log("stai provando a fare una POST api/todos   " + req.body.testo);
+  console.log("stai provando a fare una POST api/todos   " + req.body);
   const newTodo = new Todo({
     testo: req.body.testo,
     completed: false
@@ -51,14 +53,8 @@ router.post("/", (req, res) => {
 router.put("/:id", (req, res) => {
   console.log("stai provando a fare una PUT dell id:" + req.params.id);
   Todo.findByIdAndUpdate({ _id: req.params.id }, req.body)
-    .then(todo => {
-      if (todo) {
-        res.json(todo);
-      } else {
-        res.status(404).send(" id Not found"); //.json({success:false})
-      }
-    })
-    .catch(err => res.status(404).json({ success: false }));
+    .then(() => res.json(req.body))
+    .catch(err => console.log(err.message));
 });
 
 // @route  DELETE api/todos
