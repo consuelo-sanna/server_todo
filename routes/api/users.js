@@ -3,6 +3,7 @@
 
 const express = require("express");
 const router = express.Router();
+const bcrypt = require("bcryptjs");
 
 // User Model
 /* creo una var che fa riferimento al modello del mio db */
@@ -12,6 +13,7 @@ const User = require("../../models/UserModel");
 // @desc   Register new user
 // @access Public
 router.post("/", (req, res) => {
+  const saltRounds = 10;
   console.log("stai provando a fare una POST api/user   " + req.body);
 
   const { email, password } = req.body;
@@ -30,10 +32,13 @@ router.post("/", (req, res) => {
     password
   });
 
-  newUser
-    .save()
-    .then(user => res.json(user))
-    .catch(err => console.log(err.message));
+  bcrypt.genSalt(saltRounds, (err, salt) => {
+    bcrypt.hash(newUser.password, salt, (err, hash) => {
+      if (err) throw err;
+      newUser.password = hash;
+      newUser.save().catch(err => console.log(err.message));
+    });
+  });
 });
 
 module.exports = router;
