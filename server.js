@@ -8,6 +8,7 @@ app.use(express.json());
 
 app.use("/api/todos", require("./routes/api/todos"));
 app.use("/api/users", require("./routes/api/users"));
+app.use("/api/auth", require("./routes/api/auth"));
 
 // DB Config
 // permette di creare un oggetto db con tutte le informazioni per connettermi al db
