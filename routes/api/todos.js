@@ -1,5 +1,5 @@
 /*  qui sono presenti tutte le possibili "strade" e i comandi per
- *  get, post e delete
+ *  get, post, put e delete
  */
 
 const express = require("express");
