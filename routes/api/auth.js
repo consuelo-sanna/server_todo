@@ -7,6 +7,7 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const config = require("config");
 const jwt = require("jsonwebtoken");
+const authMid = require("../../middleware/authMiddleware");
 
 // User Model
 /* creo una var che fa riferimento al modello del mio db */
@@ -48,6 +49,16 @@ router.post("/", (req, res) => {
       );
     });
   });
+});
+
+// autentica l'utente attraverso il token
+// @route  GET api/auth/user
+// @desc   Get user data
+// @access Private
+router.get("/user", authMid, (req, res) => {
+  User.findById(req.user.id)
+    .select("-password") //seleziona tutto il contenuto dell User ma NON la password
+    .then(user => res.json(user));
 });
 
 module.exports = router;
