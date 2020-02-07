@@ -5,14 +5,16 @@
 const express = require("express");
 const router = express.Router();
 
+const authMid = require("../../middleware/authMiddleware");
+
 // Item Model
 /* creo una var che fa riferimento al modello del mio db */
 const Todo = require("../../models/TodoModel");
 
 // @route  GET api/todos
 // @desc   GET All todos
-// @access Public
-router.get("/", (req, res) => {
+// @access Private
+router.get("/", authMid, (req, res) => {
   console.log("stai provando a fare una GET api/todos");
   Todo.find()
     .sort({ _id: -1 })
@@ -21,8 +23,8 @@ router.get("/", (req, res) => {
 
 // @route  GETById api/todos
 // @desc   GETById one specific todo
-// @access Public
-router.get("/:id", (req, res) => {
+// @access Private
+router.get("/:id", authMid, (req, res) => {
   console.log("stai provando a fare una GET api/todos");
   Todo.findById(req.params.id)
     .then(todo => {
@@ -37,8 +39,8 @@ router.get("/:id", (req, res) => {
 
 // @route  POST api/todos
 // @desc   Create a todo
-// @access Public
-router.post("/", (req, res) => {
+// @access Private
+router.post("/", authMid, (req, res) => {
   console.log("stai provando a fare una POST api/todos   " + req.body);
   const newTodo = new Todo({
     testo: req.body.testo,
@@ -49,8 +51,8 @@ router.post("/", (req, res) => {
 
 // @route  PUT api/todos
 // @desc   Update a todo
-// @access Public
-router.put("/:id", (req, res) => {
+// @access Private
+router.put("/:id", authMid, (req, res) => {
   console.log("stai provando a fare una PUT dell id:" + req.params.id);
   Todo.findByIdAndUpdate({ _id: req.params.id }, req.body)
     .then(() => res.json(req.body))
@@ -59,8 +61,8 @@ router.put("/:id", (req, res) => {
 
 // @route  DELETE api/todos
 // @desc   DELETE a todo
-// @access Public
-router.delete("/:id", (req, res) => {
+// @access Private
+router.delete("/:id", authMid, (req, res) => {
   console.log("stai provando a fare una DELETE dell id:" + req.params.id);
   Todo.findById(req.params.id)
     .then(todo => todo.remove().then(() => res.json({ success: true })))
