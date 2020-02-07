@@ -10,6 +10,12 @@ app.use("/api/todos", require("./routes/api/todos"));
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/auth", require("./routes/api/auth"));
 
+//se la chiave segreta non è presente termina l'applicazione
+if (!config.get("jwtSecret")) {
+  console.error("FATAL ERROR: jwtSecret is not defined.");
+  process.exit(1);
+}
+
 // DB Config
 // permette di creare un oggetto db con tutte le informazioni per connettermi al db
 const db = config.get("mongoURI");
