@@ -21,7 +21,7 @@ router.get("/", authMid, (req, res) => {
     .then(todos => res.json(todos));
 });
 
-// @route  GETByUSer api/todos
+// @route  GETByUser api/todos
 // @desc   GETByUser one specific todo
 // @access Private
 router.get("/:user", authMid, (req, res) => {
@@ -35,6 +35,25 @@ router.get("/:user", authMid, (req, res) => {
     })
     .catch(err => res.status(404).json({ success: false }));
 });
+
+/*
+
+// @route  GETById api/todos
+// @desc   GETById one specific todo
+// @access Private
+router.get("/:id", authMid, (req, res) => {
+  console.log("stai provando a fare una GET api/todos");
+  Todo.findById(req.params.id)
+    .then(todo => {
+      if (todo) {
+        res.status(200).json(todo);
+      } else {
+        res.status(404).send(" id Not found"); //.json({success:false})
+      }
+    })
+    .catch(err => res.status(404).json({ success: false }));
+});
+*/
 
 // @route  POST api/todos
 // @desc   Create a todo
