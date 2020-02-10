@@ -14,6 +14,14 @@ const UserSchema = new Schema({
   password: {
     type: String,
     require: true
+  },
+  name: {
+    type: String,
+    require: false
+  },
+  lastname: {
+    type: String,
+    require: false
   }
 });
 

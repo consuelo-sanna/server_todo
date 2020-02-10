@@ -18,7 +18,7 @@ router.post("/", (req, res) => {
   const saltRounds = 10;
   console.log("stai provando a fare una POST api/user   " + req.body);
 
-  const { email, password } = req.body;
+  const { email, password, name, lastname } = req.body;
 
   //validazione di sicurezza.. poi mettila anche nel FE
   if (!email || !password) {
@@ -29,6 +29,8 @@ router.post("/", (req, res) => {
     if (user) return res.status(400).json({ msg: "User alredy exists" });
 
     const newUser = new User({
+      name,
+      lastname,
       email,
       password
     });
@@ -48,6 +50,8 @@ router.post("/", (req, res) => {
               res.json({
                 token,
                 user: {
+                  name: user.name,
+                  lastname: user.lastname,
                   id: user.id,
                   email: user.email
                 }
