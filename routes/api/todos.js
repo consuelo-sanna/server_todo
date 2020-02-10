@@ -41,12 +41,21 @@ router.get("/:id", authMid, (req, res) => {
 // @desc   Create a todo
 // @access Private
 router.post("/", authMid, (req, res) => {
-  console.log("stai provando a fare una POST api/todos   " + req.body);
-  const newTodo = new Todo({
-    testo: req.body.testo,
-    completed: false
-  });
-  newTodo.save().then(todo => res.json(todo));
+  debugger;
+  console.log(
+    "stai provando a fare una POST api/todos e sei:  " +
+      JSON.stringify(req.body)
+  );
+  if (!req.body.user || !req.body.testo) {
+    res.status(400).json({ msg: "Please enter or fields" });
+  } else {
+    const newTodo = new Todo({
+      testo: req.body.testo,
+      user: req.body.user,
+      completed: false
+    });
+    newTodo.save().then(todo => res.json(todo));
+  }
 });
 
 // @route  PUT api/todos
