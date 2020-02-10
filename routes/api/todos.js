@@ -21,18 +21,17 @@ router.get("/", authMid, (req, res) => {
     .then(todos => res.json(todos));
 });
 
-// @route  GETById api/todos
-// @desc   GETById one specific todo
+// @route  GETByUSer api/todos
+// @desc   GETByUser one specific todo
 // @access Private
-router.get("/:id", authMid, (req, res) => {
-  console.log("stai provando a fare una GET api/todos");
-  Todo.findById(req.params.id)
-    .then(todo => {
-      if (todo) {
-        res.status(200).json(todo);
-      } else {
-        res.status(404).send(" id Not found"); //.json({success:false})
-      }
+router.get("/:user", authMid, (req, res) => {
+  console.log(
+    "stai provando a fare una GETbyUser api/todos : " + req.params.user
+  );
+  Todo.find({ user: req.params.user })
+    .sort({ _id: -1 })
+    .then(todos => {
+      res.json(todos);
     })
     .catch(err => res.status(404).json({ success: false }));
 });
