@@ -2,9 +2,24 @@ var express = require("express");
 var app = express();
 var mongoose = require("mongoose");
 const config = require("config");
+var cors = require("cors");
 
-//per le POST e PUT, permette di vedere i dati in json -> forse dovevi usarlo
-app.use(express.json());
+/**
+ * Per avere una whitelist per il CORS
+ */
+const whitelist = ["http://localhost:3000"];
+const corsOption = {
+  origin: function(origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  }
+};
+
+app.use(cors(corsOption));
+app.use(express.json()); //per le POST e PUT, permette di vedere i dati in json -> forse dovevi usarlo
 
 app.use("/api/todos", require("./routes/api/todos"));
 app.use("/api/users", require("./routes/api/users"));
