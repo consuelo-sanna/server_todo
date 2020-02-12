@@ -1,8 +1,9 @@
 var express = require("express");
-var app = express();
 var mongoose = require("mongoose");
 const config = require("config");
 var cors = require("cors");
+const socketIO = require("socket.io");
+const http = require("http");
 
 /**
  * Per avere una whitelist per il CORS
@@ -17,6 +18,8 @@ const corsOption = {
     }
   }
 };
+
+var app = express();
 
 app.use(cors(corsOption));
 app.use(express.json()); //per le POST e PUT, permette di vedere i dati in json -> forse dovevi usarlo
@@ -48,6 +51,29 @@ mongoose
 //process.env è una var che esiste quando deploy su heroku (e simili?)
 const port = process.env.PORT || 5000;
 
-app.listen(port, () => {
+//our server instance
+const server = http.createServer(app);
+
+//This creates our socket using the instance of the server
+const io = socketIO(server);
+
+io.on("connection", socket => {
+  console.log("User connected");
+
+  socket.on("added todo", todo => {
+    //Here we broadcast it out to all other sockets EXCLUDING the socket which sent us the data
+    console.log("user in added todo namespace");
+    socket.emit("outgoing todo", { todo }); //per non renderlo a chi ha emesso, usa socket.broadcast.emit
+  });
+
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+});
+
+server.listen(port, () => console.log(`server listening on port ${port}`));
+
+/*app.listen(port, () => {
   console.log("Example app listening on port 5000!");
 });
+*/
