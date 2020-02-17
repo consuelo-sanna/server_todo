@@ -56,14 +56,29 @@ const server = http.createServer(app);
 
 //This creates our socket using the instance of the server
 const io = socketIO(server);
+const registeredRooms = ["add todo"];
 
-io.on("connection", socket => {
-  console.log("User connected");
+io.of("/loggedIn").on("connection", socket => {
+  console.log("connected to socket, and logged in");
 
-  socket.on("added todo", todo => {
+  //esempio inutile per ora
+  socket.on("joinRoom", room => {
     //Here we broadcast it out to all other sockets EXCLUDING the socket which sent us the data
-    console.log("user in added todo namespace");
-    socket.emit("outgoing todo", { todo }); //per non renderlo a chi ha emesso, usa socket.broadcast.emit
+    console.log("user  trying to joinin room : " + room);
+    if (registeredRooms.includes(room)) {
+      return socket.emit("success", " Joined room name: " + room);
+    } else {
+      return socket.emit("err", "Invalid room name: " + room);
+    }
+    //socket.emit("outgoing todo", { todo }); //per non renderlo a chi ha emesso, usa socket.broadcast.emit
+  });
+
+  //riceve il nuovo elemento e rimanda a tutti i presenti eccetto il mandante
+  socket.on("newTodo", data => {
+    console.log(
+      `New Todo received from the user ${data.username}:${data.todo}`
+    );
+    socket.emit("newTodo", data);
   });
 
   socket.on("disconnect", () => {
