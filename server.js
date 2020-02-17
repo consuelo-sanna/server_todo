@@ -58,8 +58,8 @@ const server = http.createServer(app);
 const io = socketIO(server);
 const registeredRooms = ["add todo"];
 
-io.of("/loggedIn").on("connection", socket => {
-  console.log("connected to socket, and logged in");
+io.on("connection", socket => {
+  console.log("connected to socket, NOT logged in");
 
   //esempio inutile per ora
   socket.on("joinRoom", room => {
@@ -73,12 +73,16 @@ io.of("/loggedIn").on("connection", socket => {
     //socket.emit("outgoing todo", { todo }); //per non renderlo a chi ha emesso, usa socket.broadcast.emit
   });
 
+  socket.on("loggedIn", myUser => {
+    console.log("utente loggato");
+    socket.join("notifyAddRoom");
+  });
+
   //riceve il nuovo elemento e rimanda a tutti i presenti eccetto il mandante
   socket.on("newTodo", data => {
-    console.log(
-      `New Todo received from the user ${data.username}:${data.todo}`
-    );
-    socket.emit("newTodo", data);
+    console.log(`New Todo received from the user ${data}`);
+    console.log(data);
+    io.sockets.in("notifyAddRoom").emit("newTodo", data.username);
   });
 
   socket.on("disconnect", () => {
