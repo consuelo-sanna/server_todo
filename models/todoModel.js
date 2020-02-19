@@ -17,7 +17,12 @@ const TodoSchema = new Schema({
   user: {
     type: String,
     require: true
-  }
+  },
+  isDeleted: {
+    type: Boolean,
+    require: false
+  },
+  data: Date
 });
 
 module.exports = Todo = mongoose.model("todo", TodoSchema);

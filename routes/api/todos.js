@@ -70,7 +70,9 @@ router.post("/", authMid, (req, res) => {
     const newTodo = new Todo({
       testo: req.body.testo,
       user: req.body.user,
-      completed: false
+      completed: false,
+      isDeleted: false,
+      data: Date()
     });
     newTodo.save().then(todo => res.json(todo));
   }
