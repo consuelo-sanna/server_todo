@@ -5,6 +5,8 @@ var cors = require("cors");
 const socketIO = require("socket.io");
 const http = require("http");
 
+const log = require("./myLog");
+
 /**
  * Per avere una whitelist per il CORS
  */
@@ -59,12 +61,12 @@ const io = socketIO(server);
 const registeredRooms = ["add todo"];
 
 io.on("connection", socket => {
-  console.log("connected to socket, NOT logged in");
+  log.logSocket("connected to socket, NOT logged in, id: " + socket.id);
 
   //esempio inutile per ora
   socket.on("joinRoom", room => {
     //Here we broadcast it out to all other sockets EXCLUDING the socket which sent us the data
-    console.log("user  trying to joinin room : " + room);
+    log.logSocket("user  trying to joinin room : " + room);
     if (registeredRooms.includes(room)) {
       return socket.emit("success", " Joined room name: " + room);
     } else {
@@ -73,20 +75,20 @@ io.on("connection", socket => {
     //socket.emit("outgoing todo", { todo }); //per non renderlo a chi ha emesso, usa socket.broadcast.emit
   });
 
-  socket.on("loggedIn", myUser => {
-    console.log("utente loggato");
-    socket.join("notifyAddRoom");
+  socket.on("loggedIn", myRoom => {
+    log.logSocket("utente loggato in " + myRoom + "di id: " + socket.id);
+    socket.join(myRoom);
   });
 
   //riceve il nuovo elemento e rimanda a tutti i presenti eccetto il mandante
   socket.on("newTodo", data => {
-    console.log(`New Todo received from the user ${data}`);
+    log.logSocket(`New Todo received from the user ${data}`);
     console.log(data);
     io.sockets.in("notifyAddRoom").emit("newTodo", data.username);
   });
 
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+    log.logSocket("user disconnected, id: " + socket.id);
   });
 });
 
