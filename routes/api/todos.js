@@ -7,6 +7,8 @@ const router = express.Router();
 
 const authMid = require("../../middleware/authMiddleware");
 
+const log = require("../../myLog");
+
 // Item Model
 /* creo una var che fa riferimento al modello del mio db */
 const Todo = require("../../models/TodoModel");
@@ -15,7 +17,7 @@ const Todo = require("../../models/TodoModel");
 // @desc   GET All todos
 // @access Private
 router.get("/", authMid, (req, res) => {
-  console.log("stai provando a fare una GET api/todos");
+  log.logTodo("stai provando a fare una GET api/todos");
   Todo.find()
     .sort({ _id: -1 })
     .then(todos => res.json(todos));
@@ -25,7 +27,7 @@ router.get("/", authMid, (req, res) => {
 // @desc   GETByUser one specific todo
 // @access Private
 router.get("/:user", authMid, (req, res) => {
-  console.log(
+  log.logTodo(
     "stai provando a fare una GETbyUser api/todos : " + req.params.user
   );
   Todo.find({ user: req.params.user })
@@ -60,7 +62,7 @@ router.get("/:id", authMid, (req, res) => {
 // @access Private
 router.post("/", authMid, (req, res) => {
   debugger;
-  console.log(
+  log.logTodo(
     "stai provando a fare una POST api/todos e sei:  " +
       JSON.stringify(req.body)
   );
@@ -82,7 +84,7 @@ router.post("/", authMid, (req, res) => {
 // @desc   Update a todo
 // @access Private
 router.put("/:id", authMid, (req, res) => {
-  console.log("stai provando a fare una PUT dell id:" + req.params.id);
+  log.logTodo("stai provando a fare una PUT dell id:" + req.params.id);
   Todo.findByIdAndUpdate({ _id: req.params.id }, req.body)
     .then(() => res.json(req.body))
     .catch(err => console.log(err.message));
@@ -92,7 +94,7 @@ router.put("/:id", authMid, (req, res) => {
 // @desc   DELETE a todo
 // @access Private
 router.delete("/:id", authMid, (req, res) => {
-  console.log("stai provando a fare una DELETE dell id:" + req.params.id);
+  log.logTodo("stai provando a fare una DELETE dell id:" + req.params.id);
   Todo.findById(req.params.id)
     .then(todo => todo.remove().then(() => res.json({ success: true })))
     .catch(err => res.status(404).json({ success: false }));
