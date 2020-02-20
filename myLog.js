@@ -14,3 +14,8 @@ exports.logAutenticazione = (function() {
   var todo = chalk.yellow("Todo:");
   return Function.prototype.bind.call(console.log, console, todo);
 })();
+
+exports.logServizio = (function() {
+  var todo = chalk.green("Todo:");
+  return Function.prototype.bind.call(console.log, console, todo);
+})();

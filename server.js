@@ -47,7 +47,7 @@ mongoose
     useNewUrlParser: true,
     useCreateIndex: true
   })
-  .then(() => console.log("MongoDB connected..."))
+  .then(() => log.logServizio("MongoDB connected..."))
   .catch(err => console.log(err));
 
 //process.env è una var che esiste quando deploy su heroku (e simili?)
@@ -92,7 +92,7 @@ io.on("connection", socket => {
   });
 });
 
-server.listen(port, () => console.log(`server listening on port ${port}`));
+server.listen(port, () => log.logServizio(`server listening on port ${port}`));
 
 /*app.listen(port, () => {
   console.log("Example app listening on port 5000!");
