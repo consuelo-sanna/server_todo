@@ -22,12 +22,13 @@ const corsOption = {
 
 var app = express();
 
-app.use(cors(corsOption));
+app.use(cors(/*corsOption*/));
 app.use(express.json()); //per le POST e PUT, permette di vedere i dati in json -> forse dovevi usarlo
 
 app.use("/api/todos", require("./routes/api/todos"));
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/auth", require("./routes/api/auth"));
+app.use("/api/statistics", require("./routes/api/statistics"));
 
 //se la chiave segreta non è presente termina l'applicazione
 if (!config.get("jwtSecret")) {

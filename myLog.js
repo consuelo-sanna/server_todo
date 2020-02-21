@@ -11,13 +11,18 @@ exports.logTodo = (function() {
 })();
 
 exports.logAutenticazione = (function() {
-  var todo = chalk.yellow("Todo:");
-  return Function.prototype.bind.call(console.log, console, todo);
+  var context = chalk.yellow("Todo:");
+  return Function.prototype.bind.call(console.log, console, context);
 })();
 
 exports.logServizio = (function() {
-  var todo = chalk.green("Todo:");
-  return Function.prototype.bind.call(console.log, console, todo);
+  var context = chalk.green("Todo:");
+  return Function.prototype.bind.call(console.log, console, context);
+})();
+
+exports.logStatistics = (function() {
+  var context = chalk.yellowBright("Stat:");
+  return Function.prototype.bind.call(console.log, console, context);
 })();
 
 exports.myTime = function() {
