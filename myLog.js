@@ -1,7 +1,7 @@
 const chalk = require("chalk");
 
 exports.logSocket = (function() {
-  var context = chalk.blue("Socket:");
+  var context = chalk.blue(`Socket:`);
   return Function.prototype.bind.call(console.log, console, context);
 })();
 
@@ -19,3 +19,11 @@ exports.logServizio = (function() {
   var todo = chalk.green("Todo:");
   return Function.prototype.bind.call(console.log, console, todo);
 })();
+
+exports.myTime = function() {
+  let date = new Date();
+
+  let ora = date.getHours();
+  let min = date.getMinutes();
+  return `[${ora}:${min}]`;
+};

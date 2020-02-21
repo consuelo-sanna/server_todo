@@ -2,7 +2,6 @@ var express = require("express");
 var mongoose = require("mongoose");
 const config = require("config");
 var cors = require("cors");
-const socketIO = require("socket.io");
 const http = require("http");
 
 const log = require("./myLog");
@@ -57,11 +56,21 @@ const port = process.env.PORT || 5000;
 const server = http.createServer(app);
 
 //This creates our socket using the instance of the server
-const io = socketIO(server);
+const io = require("socket.io")(server, {
+  serveClient: false,
+  pingInterval: 10000,
+  pingTimeout: 120000,
+  cookie: false
+});
+//const io = socketIO(server);
 const registeredRooms = ["add todo"];
 
 io.on("connection", socket => {
-  log.logSocket("connected to socket, NOT logged in, id: " + socket.id);
+  log.logSocket(
+    `${log.myTime()} Socket: connected to socket, NOT logged in, id: ${
+      socket.id
+    } `
+  );
 
   //esempio inutile per ora
   socket.on("joinRoom", room => {
@@ -76,19 +85,23 @@ io.on("connection", socket => {
   });
 
   socket.on("loggedIn", myRoom => {
-    log.logSocket("utente loggato in " + myRoom + "di id: " + socket.id);
+    log.logSocket("utente loggato in " + myRoom + " ,di id: " + socket.id);
     socket.join(myRoom);
   });
 
   //riceve il nuovo elemento e rimanda a tutti i presenti eccetto il mandante
   socket.on("newTodo", data => {
-    log.logSocket(`New Todo received from the user ${data}`);
-    console.log(data);
-    io.sockets.in("notifyAddRoom").emit("newTodo", data.username);
+    log.logSocket(`New Todo received from the user ${data.username}`);
+    io.to("notifyAddRoom").emit("newTodo", data.username);
+  });
+
+  socket.on("loggedOut", myRoom => {
+    log.logSocket("utente USCITO da " + myRoom + " ,di id: " + socket.id);
+    socket.leave(myRoom);
   });
 
   socket.on("disconnect", () => {
-    log.logSocket("user disconnected, id: " + socket.id);
+    log.logSocket(`${log.myTime()} user disconnected, id: ${socket.id}`);
   });
 });
 
