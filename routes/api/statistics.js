@@ -6,52 +6,33 @@ const log = require("../../myLog");
 //potresti creare un nuovo middleware per autenticare il RUOLO.. anche se è gia controllato dal client al momento
 
 const Todo = require("../../models/TodoModel");
+const User = require("../../models/UserModel");
 
-// @route  GET api/statistics/todos
+// @route  GET api/statistics/
 // @desc   GET statistics about todos
-// @access Public
-router.get("/todos", (req, res) => {
+// @access Private
+router.get("/", authMid, async (req, res) => {
   log.logStatistics("stai provando a fare una GET api/statistics/todos");
 
-  /* const totalTodos = async function() {
-    try {
-      return await Todo.countDocuments()
-        .sort({ data: -1 })
-        .then(todos => res.json(todos));
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  let totale = totalTodos();
-  res.send({ totali: totale }); */
+  // perche non cambia niente se metto o non metto exec? e perche non funziona con const?
+  var totaleTodo = await Todo.countDocuments().exec();
+  var totaleUser = await User.countDocuments().exec();
+  console.log(totaleTodo);
+  var lista = await Todo.find()
+    .sort({ data: -1 })
+    .limit(5)
+    .exec();
+  console.log(lista);
+  const card = [
+    { titolo: "Tot Todo", risultato: totaleTodo },
+    { titolo: "Tot User", risultato: totaleUser }
+  ];
 
-  /*var myPromise = () => {
-    return new Promise((resolve, reject) => {
-      Todo.countDocuments()
-        .sort({ data: -1 })
-        .then(todos => res.json(todos));
-    });
+  const risultato = {
+    card: card,
+    lista: lista
   };
-  var callMyPromise = async () => {
-    var result = await myPromise();
-    console.log(result);
-    return result;
-  };
-  console.log(callMyPromise();  */
-
-  //console.log(totalTodos());
-
-  /*const total = async (req, res) => {
-    const valore = await Todo.countDocuments()
-      .sort({ data: -1 })
-      .then(todos => res.json(todos));
-  };
-  console.log(total);
-  res.json({ totale: total });*/
-
-  const resw = Todo.countDocuments();
-  console.log(resw);
-  res.end(resw);
+  res.send(risultato);
 });
 
 module.exports = router;
