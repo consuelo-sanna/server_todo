@@ -22,6 +22,10 @@ const TodoSchema = new Schema({
     type: Boolean,
     require: false
   },
+  FileSystemPath: {
+    type: String,
+    require: false
+  },
   data: Date
 });
 

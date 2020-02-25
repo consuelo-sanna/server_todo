@@ -6,8 +6,10 @@ const express = require("express");
 const router = express.Router();
 
 const authMid = require("../../middleware/authMiddleware");
-
 const log = require("../../myLog");
+
+const multer = require("multer");
+var upload = multer({ dest: "uploads/" });
 
 // Item Model
 /* creo una var che fa riferimento al modello del mio db */
@@ -60,22 +62,25 @@ router.get("/:id", authMid, (req, res) => {
 // @route  POST api/todos
 // @desc   Create a todo
 // @access Private
-router.post("/", authMid, (req, res) => {
-  debugger;
-  log.logTodo(
+router.post("/", authMid, upload.single("file"), (req, res) => {
+  /*log.logTodo(
     "stai provando a fare una POST api/todos e sei:  " +
       JSON.stringify(req.body)
-  );
+  );*/
+  console.log("req " + req);
+
   if (!req.body.user || !req.body.testo) {
-    res.status(400).json({ msg: "Please enter or fields" });
+    res.status(400).json({ msg: "Please enter all fields" });
   } else {
     const newTodo = new Todo({
       testo: req.body.testo,
       user: req.body.user,
       completed: false,
       isDeleted: false,
-      data: Date()
+      data: Date(),
+      FileSystemPath: req.file ? req.file.path : ""
     });
+
     newTodo.save().then(todo => res.json(todo));
   }
 });
@@ -98,6 +103,26 @@ router.delete("/:id", authMid, (req, res) => {
   Todo.findById(req.params.id)
     .then(todo => todo.remove().then(() => res.json({ success: true })))
     .catch(err => res.status(404).json({ success: false }));
+});
+
+/*  var storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, "./upload");
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.originalname);
+  }
+});   */
+
+// @route  UPLOAD api/todos/upload
+// @desc   UPLOAD a todo
+// @access Public
+router.post("/upload", upload.single("file"), (req, res) => {
+  try {
+    res.send(req.file);
+  } catch (err) {
+    res.send(400);
+  }
 });
 
 module.exports = router;
