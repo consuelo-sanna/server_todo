@@ -25,6 +25,20 @@ router.get("/", authMid, (req, res) => {
     .then(todos => res.json(todos));
 });
 
+// @route  DOWNLOAD api/todos/download
+// @desc   DOWNLOAD a todo
+// @access Private
+
+router.get("/download/:path", authMid, (req, res) => {
+  var filePath = req.params.path; // Or format the path using the `id` rest param
+  console.log("path creato: " + __dirname + "/../../uploads/" + filePath);
+  try {
+    res.download(__dirname + "/../../uploads/" + filePath);
+  } catch (err) {
+    res.send(400);
+  }
+});
+
 // @route  GETByUser api/todos
 // @desc   GETByUser one specific todo
 // @access Private
@@ -78,7 +92,8 @@ router.post("/", authMid, upload.single("file"), (req, res) => {
       completed: false,
       isDeleted: false,
       data: Date(),
-      FileSystemPath: req.file ? req.file.path : ""
+      FileSystemPath: req.file ? req.file.path : "",
+      FileName: req.file ? req.file.originalname : ""
     });
 
     newTodo.save().then(todo => res.json(todo));
@@ -118,6 +133,7 @@ router.delete("/:id", authMid, (req, res) => {
 // @desc   UPLOAD a todo
 // @access Public
 router.post("/upload", upload.single("file"), (req, res) => {
+  console.log("sono in upload");
   try {
     res.send(req.file);
   } catch (err) {
