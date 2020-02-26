@@ -120,9 +120,11 @@ router.delete("/:id", authMid, async (req, res) => {
   Todo.findById(req.params.id)
     .then(todo => {
       /** elimino il file dal file system */
-      fs.unlink(__dirname + "/../../" + todo.FileSystemPath, function(err) {
-        if (err) throw err;
-      });
+      if (todo.FileSystemPath !== "") {
+        fs.unlink(__dirname + "/../../" + todo.FileSystemPath, function(err) {
+          if (err) throw err;
+        });
+      }
       return todo;
     })
     .then(todo => todo.remove().then(() => res.json({ success: true })))
