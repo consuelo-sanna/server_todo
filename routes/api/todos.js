@@ -10,6 +10,7 @@ const log = require("../../myLog");
 
 const multer = require("multer");
 var upload = multer({ dest: "uploads/" });
+const fs = require("fs");
 
 // Item Model
 /* creo una var che fa riferimento al modello del mio db */
@@ -35,6 +36,7 @@ router.get("/download/:path", authMid, (req, res) => {
   try {
     res.download(__dirname + "/../../uploads/" + filePath);
   } catch (err) {
+    54;
     res.send(400);
   }
 });
@@ -113,11 +115,21 @@ router.put("/:id", authMid, (req, res) => {
 // @route  DELETE api/todos
 // @desc   DELETE a todo
 // @access Private
-router.delete("/:id", authMid, (req, res) => {
+router.delete("/:id", authMid, async (req, res) => {
   log.logTodo("stai provando a fare una DELETE dell id:" + req.params.id);
   Todo.findById(req.params.id)
+    .then(todo => {
+      /** elimino il file dal file system */
+      fs.unlink(__dirname + "/../../" + todo.FileSystemPath, function(err) {
+        if (err) throw err;
+      });
+      return todo;
+    })
     .then(todo => todo.remove().then(() => res.json({ success: true })))
-    .catch(err => res.status(404).json({ success: false }));
+    .catch(err => {
+      console.log(err);
+      res.status(404).json({ success: false });
+    });
 });
 
 /*  var storage = multer.diskStorage({
