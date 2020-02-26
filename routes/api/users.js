@@ -7,6 +7,9 @@ const bcrypt = require("bcryptjs");
 const config = require("config");
 const jwt = require("jsonwebtoken");
 
+const schemas = require("../../schemas");
+const validation = require("../../middleware/validationMiddleware");
+
 // User Model
 /* creo una var che fa riferimento al modello del mio db */
 const User = require("../../models/UserModel");
@@ -14,16 +17,11 @@ const User = require("../../models/UserModel");
 // @route  POST api/users
 // @desc   Register new user
 // @access Public
-router.post("/", (req, res) => {
+router.post("/", validation(schemas.registration), (req, res) => {
   const saltRounds = 10;
   console.log("stai provando a fare una POST api/user   " + req.body);
 
   const { email, password, name, lastname } = req.body;
-
-  //validazione di sicurezza.. poi mettila anche nel FE
-  if (!email || !password) {
-    return res.status(400).json({ msg: "Please enter all fields" });
-  }
 
   User.findOne({ email }).then(user => {
     if (user) return res.status(400).json({ msg: "User alredy exists" });
