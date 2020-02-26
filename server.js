@@ -22,7 +22,7 @@ const corsOption = {
 
 var app = express();
 
-app.use(cors(corsOption));
+app.use(cors(/*corsOption*/));
 app.use(express.json()); //per le POST e PUT, permette di vedere i dati in json -> forse dovevi usarlo
 
 app.use("/api/todos", require("./routes/api/todos"));
