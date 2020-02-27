@@ -4,7 +4,7 @@ const Joi = require("joi");
 
 const validationMiddleware = (schema, property) => {
   return (req, res, next) => {
-    const { error } = Joi.validate(req.body, schema);
+    const { error } = Joi.validate(req[property], schema);
     const valid = error == null;
 
     if (valid) {

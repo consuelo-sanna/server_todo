@@ -10,7 +10,10 @@ const schemas = {
     password: Joi.string().required(),
     name: Joi.string().allow(""),
     lastname: Joi.string().allow("")
-  })
+  }),
+  todoListByUser: {
+    user: Joi.string().required()
+  }
   // define all the other schemas below
 };
 module.exports = schemas;

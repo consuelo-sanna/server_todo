@@ -17,7 +17,7 @@ const User = require("../../models/UserModel");
 // @route  POST api/users
 // @desc   Register new user
 // @access Public
-router.post("/", validation(schemas.registration), (req, res) => {
+router.post("/", validation(schemas.registration, "body"), (req, res) => {
   const saltRounds = 10;
   console.log("stai provando a fare una POST api/user   " + req.body);
 

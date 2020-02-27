@@ -12,6 +12,9 @@ const multer = require("multer");
 var upload = multer({ dest: "uploads/" });
 const fs = require("fs");
 
+const schemas = require("../../schemas");
+const validation = require("../../middleware/validationMiddleware");
+
 // Item Model
 /* creo una var che fa riferimento al modello del mio db */
 const Todo = require("../../models/TodoModel");
@@ -44,17 +47,23 @@ router.get("/download/:path", authMid, (req, res) => {
 // @route  GETByUser api/todos
 // @desc   GETByUser one specific todo
 // @access Private
-router.get("/:user", authMid, (req, res) => {
-  log.logTodo(
-    "stai provando a fare una GETbyUser api/todos : " + req.params.user
-  );
-  Todo.find({ user: req.params.user })
-    .sort({ _id: -1 })
-    .then(todos => {
-      res.json(todos);
-    })
-    .catch(err => res.status(404).json({ success: false }));
-});
+router.get(
+  "/:user",
+  authMid,
+  validation(schemas.todoListByUser, "params"),
+  (req, res) => {
+    log.logTodo(
+      "stai provando a fare una GETbyUser api/todos : " + req.params.user
+    );
+
+    Todo.find({ user: req.params.user })
+      .sort({ _id: -1 })
+      .then(todos => {
+        res.json(todos);
+      })
+      .catch(err => res.status(404).json({ success: false }));
+  }
+);
 
 /*
 
