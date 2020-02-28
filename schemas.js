@@ -13,6 +13,9 @@ const schemas = {
   }),
   todoListByUser: {
     user: Joi.string().required()
+  },
+  todoDel: {
+    id: Joi.string().required()
   }
   // define all the other schemas below
 };

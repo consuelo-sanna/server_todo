@@ -23,43 +23,45 @@ router.post("/", validation(schemas.registration, "body"), (req, res) => {
 
   const { email, password, name, lastname } = req.body;
 
-  User.findOne({ email }).then(user => {
-    if (user) return res.status(400).json({ msg: "User alredy exists" });
+  User.findOne({ email })
+    .then(user => {
+      if (user) return res.status(400).json({ msg: "User alredy exists" });
 
-    const newUser = new User({
-      name,
-      lastname,
-      email,
-      password
-    });
+      const newUser = new User({
+        name,
+        lastname,
+        email,
+        password
+      });
 
-    // Create salt & hash
-    bcrypt.genSalt(saltRounds, (err, salt) => {
-      bcrypt.hash(newUser.password, salt, (err, hash) => {
-        if (err) throw err;
-        newUser.password = hash;
-        newUser.save().then(user => {
-          jwt.sign(
-            { id: user.id },
-            config.get("jwtSecret"),
-            { expiresIn: 3600 },
-            (err, token) => {
-              if (err) throw err;
-              res.json({
-                token,
-                user: {
-                  name: user.name,
-                  lastname: user.lastname,
-                  id: user.id,
-                  email: user.email
-                }
-              });
-            }
-          );
+      // Create salt & hash
+      bcrypt.genSalt(saltRounds, (err, salt) => {
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+          if (err) throw err;
+          newUser.password = hash;
+          newUser.save().then(user => {
+            jwt.sign(
+              { id: user.id },
+              config.get("jwtSecret"),
+              { expiresIn: 3600 },
+              (err, token) => {
+                if (err) throw err;
+                res.json({
+                  token,
+                  user: {
+                    name: user.name,
+                    lastname: user.lastname,
+                    id: user.id,
+                    email: user.email
+                  }
+                });
+              }
+            );
+          });
         });
       });
-    });
-  });
+    })
+    .catch(err => console.log(err.message));
 });
 
 module.exports = router;

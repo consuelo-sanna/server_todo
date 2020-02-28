@@ -26,7 +26,8 @@ router.get("/", authMid, (req, res) => {
   log.logTodo("stai provando a fare una GET api/todos");
   Todo.find()
     .sort({ _id: -1 })
-    .then(todos => res.json(todos));
+    .then(todos => res.json(todos))
+    .catch(err => res.status(404).json({ success: false }));
 });
 
 // @route  DOWNLOAD api/todos/download
@@ -88,12 +89,6 @@ router.get("/:id", authMid, (req, res) => {
 // @desc   Create a todo
 // @access Private
 router.post("/", authMid, upload.single("file"), (req, res) => {
-  /*log.logTodo(
-    "stai provando a fare una POST api/todos e sei:  " +
-      JSON.stringify(req.body)
-  );*/
-  console.log("req " + req);
-
   if (!req.body.user || !req.body.testo) {
     res.status(400).json({ msg: "Please enter all fields" });
   } else {
@@ -107,7 +102,10 @@ router.post("/", authMid, upload.single("file"), (req, res) => {
       FileName: req.file ? req.file.originalname : ""
     });
 
-    newTodo.save().then(todo => res.json(todo));
+    newTodo
+      .save()
+      .then(todo => res.json(todo))
+      .catch(err => res.status(400).json({ success: false }));
   }
 });
 
@@ -124,24 +122,38 @@ router.put("/:id", authMid, (req, res) => {
 // @route  DELETE api/todos
 // @desc   DELETE a todo
 // @access Private
-router.delete("/:id", authMid, async (req, res) => {
-  log.logTodo("stai provando a fare una DELETE dell id:" + req.params.id);
-  Todo.findById(req.params.id)
-    .then(todo => {
-      /** elimino il file dal file system */
-      if (todo.FileSystemPath !== "") {
-        fs.unlink(__dirname + "/../../" + todo.FileSystemPath, function(err) {
-          if (err) throw err;
+router.delete(
+  "/:id",
+  authMid,
+  validation(schemas.todoDel, "params"),
+  async (req, res) => {
+    log.logTodo("quiiiiiiiiiiiii");
+    console.log(req.params);
+    log.logTodo("stai provando a fare una DELETE dell id:" + req.params.id);
+    if (req.params !== undefined) {
+      Todo.findById(req.params.id)
+        .then(todo => {
+          /** elimino il file dal file system */
+          if (todo.FileSystemPath !== "") {
+            fs.unlink(__dirname + "/../../" + todo.FileSystemPath, function(
+              err
+            ) {
+              if (err) throw err;
+            });
+          }
+          return todo;
+        })
+        .then(todo => todo.remove().then(() => res.json({ success: true })))
+        .catch(err => {
+          console.log(err);
+          res.status(404).json({ success: false });
         });
-      }
-      return todo;
-    })
-    .then(todo => todo.remove().then(() => res.json({ success: true })))
-    .catch(err => {
-      console.log(err);
+    } else {
+      console.log("jjjoojojoijoijoijoi entrato nell else");
       res.status(404).json({ success: false });
-    });
-});
+    }
+  }
+);
 
 /*  var storage = multer.diskStorage({
   destination: function(req, file, cb) {
