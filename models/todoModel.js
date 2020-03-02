@@ -8,27 +8,27 @@ const Schema = mongoose.Schema;
 const TodoSchema = new Schema({
   testo: {
     type: String,
-    require: true
+    required: true
   },
   completed: {
     type: Boolean,
-    require: true
+    required: true
   },
   user: {
     type: String,
-    require: true
+    required: true
   },
   isDeleted: {
     type: Boolean,
-    require: false
+    required: false
   },
   FileSystemPath: {
     type: String,
-    require: false
+    required: false
   },
   FileName: {
     type: String,
-    require: false
+    required: false
   },
   data: Date
 });

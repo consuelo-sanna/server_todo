@@ -51,7 +51,7 @@ mongoose
   .catch(err => console.log(err));
 
 //process.env è una var che esiste quando deploy su heroku (e simili?)
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5002;
 
 //our server instance
 const server = http.createServer(app);
