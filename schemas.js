@@ -9,7 +9,8 @@ const schemas = {
       .required(),
     password: Joi.string().required(),
     name: Joi.string().allow(""),
-    lastname: Joi.string().allow("")
+    lastname: Joi.string().allow(""),
+    role: Joi.string().allow("")
   }),
   todoListByUser: {
     user: Joi.string().required()

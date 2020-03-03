@@ -1,10 +1,10 @@
 var express = require("express");
-var mongoose = require("mongoose");
 const config = require("config");
 var cors = require("cors");
 const http = require("http");
-
 const log = require("./myLog");
+var app = express();
+const dbConnection = require("./dbConnection");
 
 /**
  * Per avere una whitelist per il CORS
@@ -20,8 +20,6 @@ const corsOption = {
   }
 };
 
-var app = express();
-
 app.use(cors(/*corsOption*/));
 app.use(express.json()); //per le POST e PUT, permette di vedere i dati in json -> forse dovevi usarlo
 
@@ -35,20 +33,6 @@ if (!config.get("jwtSecret")) {
   console.error("FATAL ERROR: jwtSecret is not defined.");
   process.exit(1);
 }
-
-// DB Config
-// permette di creare un oggetto db con tutte le informazioni per connettermi al db
-const db = config.get("mongoURI");
-
-// Connect to Mongo
-mongoose
-  .connect(db, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    useCreateIndex: true
-  })
-  .then(() => log.logServizio("MongoDB connected..."))
-  .catch(err => console.log(err));
 
 //process.env è una var che esiste quando deploy su heroku (e simili?)
 const port = process.env.PORT || 5002;
@@ -112,3 +96,5 @@ server.listen(port, () => log.logServizio(`server listening on port ${port}`));
   console.log("Example app listening on port 5000!");
 });
 */
+
+module.exports = { app, server };

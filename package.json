@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "jest --runInBand ./test"
+    "test": "jest --runInBand --detectOpenHandles ./test"
   },
   "author": "Consuelo Sanna",
   "license": "ISC",

@@ -21,7 +21,7 @@ router.post("/", validation(schemas.registration, "body"), (req, res) => {
   const saltRounds = 10;
   console.log("stai provando a fare una POST api/user   " + req.body);
 
-  const { email, password, name, lastname } = req.body;
+  const { email, password, name, lastname, role } = req.body;
 
   User.findOne({ email })
     .then(user => {
@@ -31,7 +31,8 @@ router.post("/", validation(schemas.registration, "body"), (req, res) => {
         name,
         lastname,
         email,
-        password
+        password,
+        role
       });
 
       // Create salt & hash
@@ -52,7 +53,8 @@ router.post("/", validation(schemas.registration, "body"), (req, res) => {
                     name: user.name,
                     lastname: user.lastname,
                     id: user.id,
-                    email: user.email
+                    email: user.email,
+                    role: user.role
                   }
                 });
               }
