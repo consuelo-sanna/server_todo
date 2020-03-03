@@ -31,19 +31,3 @@ describe("Post Endpoints", () => {
       .expect(200);
   });
 });
-
-/*
-it("create & save user successfully", async () => {
-    const validTodo = new TodoModel(todoComplete);
-    const savedTodo = await validTodo.save();
-    // Object Id should be defined when successfully saved to MongoDB.
-    expect(savedTodo._id).toBeDefined();
-    expect(savedTodo.testo).toBe(todoComplete.testo);
-    expect(savedTodo.completed).toBe(todoComplete.completed);
-    expect(savedTodo.user).toBe(todoComplete.user);
-    expect(savedTodo.isDeleted).toBe(todoComplete.isDeleted);
-    expect(savedTodo.FileSystemPath).toBe(todoComplete.FileSystemPath);
-    expect(savedTodo.FileName).toBe(todoComplete.FileName);
-  });
-
-  */
