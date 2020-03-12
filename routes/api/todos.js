@@ -116,7 +116,10 @@ router.put("/:id", authMid, (req, res) => {
   log.logTodo("stai provando a fare una PUT dell id:" + req.params.id);
   Todo.findByIdAndUpdate({ _id: req.params.id }, req.body)
     .then(() => res.json(req.body))
-    .catch(err => console.log(err.message));
+    .catch(err => {
+      console.log(err.message);
+      res.status(404).json({ success: false });
+    });
 });
 
 // @route  DELETE api/todos
