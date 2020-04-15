@@ -1,4 +1,4 @@
 {
-    "mongoURI":"mongodb+srv://consu:sandokan00@cluster0-jdngg.mongodb.net/db_todos?retryWrites=true&w=majority",
-    "jwtSecret": "sl_myJwtSecret"
+  "mongoURI": "mongodb+srv://consu:sandokan00@todoclustergcp-fg8tg.gcp.mongodb.net/test?retryWrites=true&w=majority",
+  "jwtSecret": "sl_myJwtSecret"
 }
